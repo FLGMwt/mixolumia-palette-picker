@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useMemo } from 'react';
 import { SketchPicker } from 'react-color';
 import numbers from './numbers';
 import squids from './squids';
@@ -7,15 +7,15 @@ import { ColorContext } from './contexts';
 // todo: pixel scale somehow?
 const pixelSize = 6; // pixel size in pixels ; D
 const pixels = (pixelCount) => pixelCount * pixelSize;
-const Pixel = ({ color }) => {
+const Pixel = React.memo(({ color }) => {
   return (
     <div
       style={{ backgroundColor: color, width: pixelSize, height: pixelSize }}
     />
   );
-};
+});
 
-const PixelImage = ({ grid, color }) => {
+const PixelImage = React.memo(({ grid, color }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       {grid.map((row, i) => (
@@ -27,7 +27,7 @@ const PixelImage = ({ grid, color }) => {
       ))}
     </div>
   );
-};
+});
 
 const ColorPicker = ({ number }) => {
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -42,7 +42,7 @@ const ColorPicker = ({ number }) => {
 
   const size = pixels(isBackground ? 10 : 12);
   return (
-    <div style={{ margin: pixels(2) }}>
+    <div style={{ margin: pixels(1) }}>
       <div
         onClick={() => setPickerOpen(true)}
         style={{
@@ -171,6 +171,43 @@ const BlockRow = ({ blocks, offset }) => {
   );
 };
 
+const getGrid = (width, height) => {
+  const halfWidth = width / 2;
+  const grid = new Array(height).fill(null).map((x, rowIndex) => {
+    const rightHalf = new Array(halfWidth).fill(null).map((y, columnIndex) => {
+      if (rowIndex < halfWidth) {
+        if (columnIndex === rowIndex || columnIndex === rowIndex - 1) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+      if (rowIndex < height - halfWidth) {
+        return columnIndex === halfWidth - 1;
+      }
+      if (
+        height - 1 - rowIndex === columnIndex ||
+        height - 2 - rowIndex === columnIndex
+      ) {
+        return 1;
+      }
+    });
+    const leftHalf = [...rightHalf].reverse();
+    return [...leftHalf, ...rightHalf];
+  });
+  return grid;
+};
+
+const BoardFrame = React.memo(() => {
+  const width = 68;
+  const height = 120;
+
+  const grid = useMemo(() => getGrid(width, height), [width, height]);
+  const [colors] = useContext(ColorContext);
+
+  return <PixelImage color={colors[1]} grid={grid} />;
+});
+
 const ConfigAndInstructions = ({ name }) => {
   const [colors] = useContext(ColorContext);
   const configText = getConfigText({
@@ -199,6 +236,7 @@ const ConfigAndInstructions = ({ name }) => {
     </div>
   );
 };
+
 const ColorPalette = () => {
   const [name, setName] = useState('Pico Dark');
   return (
@@ -213,7 +251,7 @@ const ColorPalette = () => {
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', marginBottom: pixels(30) }}>
           <ColorPicker number={0} />
           <ColorPicker number={1} />
           <ColorPicker number={2} />
@@ -272,6 +310,9 @@ const ColorPalette = () => {
             <Block />,
           ]}
         />
+        <div style={{ marginLeft: pixels(5), marginTop: -pixels(116) }}>
+          <BoardFrame />
+        </div>
       </div>
       <ConfigAndInstructions name={name} />
     </div>
