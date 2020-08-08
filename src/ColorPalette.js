@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { SketchPicker } from "react-color";
 import numbers from "./numbers";
 
 // todo: pixel scale somehow?
@@ -27,15 +28,14 @@ const PixelImage = ({ grid, color }) => {
 };
 
 const ColorPicker = ({ color, setColor, number }) => {
+  const [pickerOpen, setPickerOpen] = useState(false);
+  console.log({ pickerOpen });
+
   const size = pixels(12);
   return (
     <div style={{ margin: pixels(2) }}>
-      <input
-        style={{ width: size - 20, marginBottom: pixels(2) }}
-        onChange={(e) => setColor(e.target.value)}
-        value={color}
-      />
       <div
+        onClick={() => setPickerOpen(true)}
         style={{
           width: size,
           height: size,
@@ -43,6 +43,29 @@ const ColorPicker = ({ color, setColor, number }) => {
           backgroundColor: color,
         }}
       />
+      {pickerOpen ? (
+        <div
+          style={{
+            position: "absolute",
+            zIndex: "2",
+          }}
+        >
+          <div
+            style={{
+              position: "fixed",
+              top: "0px",
+              right: "0px",
+              bottom: "0px",
+              left: "0px",
+            }}
+            onClick={() => setPickerOpen(false)}
+          />
+          <SketchPicker
+            color={color}
+            onChange={(newColor) => setColor(newColor.hex)}
+          />
+        </div>
+      ) : null}
       <PixelImage color="white" grid={numbers[number]} />
     </div>
   );
