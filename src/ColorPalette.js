@@ -92,16 +92,7 @@ name=${name}
     .trimStart()
     .replace(/#/g, "");
 
-const squidConfig = {
-  2: { name: "Bubble", grid: squids.bubble },
-  3: { name: "Smashgirl", grid: squids.smashGirl },
-  4: { name: "Donut", grid: squids.donut },
-  5: { name: "Target", grid: squids.target },
-};
-
-const Squid = ({ number }) => {
-  const [colors] = useContext(ColorContext);
-  const config = squidConfig[number];
+const SquidPreview = ({ name, squid }) => {
   return (
     <div
       style={{
@@ -111,12 +102,32 @@ const Squid = ({ number }) => {
         marginBottom: pixels(2),
       }}
     >
-      <div style={{ flex: 1 }}>{config.name}</div>
-      <div style={{ flex: 1 }}>
-        <PixelImage color={colors[number]} grid={config.grid} />
-      </div>
+      <div style={{ flex: 1 }}>{name}</div>
+      <div style={{ flex: 1 }}>{squid}</div>
     </div>
   );
+};
+
+const Squid = ({ number, grid }) => {
+  const [colors] = useContext(ColorContext);
+  console.log(grid);
+  return <PixelImage color={colors[number]} grid={grid} />;
+};
+
+const Bubble = () => {
+  return <Squid number={2} grid={squids.bubble} />;
+};
+
+const Smashgirl = () => {
+  return <Squid number={3} grid={squids.smashGirl} />;
+};
+
+const Donut = () => {
+  return <Squid number={4} grid={squids.donut} />;
+};
+
+const Target = () => {
+  return <Squid number={5} grid={squids.target} />;
 };
 
 const ConfigAndInstructions = ({ name }) => {
@@ -149,7 +160,6 @@ const ConfigAndInstructions = ({ name }) => {
 };
 
 const ColorPalette = () => {
-  // TODO state as object? this is unwieldy 🙃
   const [name, setName] = useState("Pico Dark");
   return (
     <div style={{ display: "flex" }}>
@@ -172,13 +182,13 @@ const ColorPalette = () => {
           <ColorPicker number={5} />
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <Squid number={2} />
-          <Squid number={3} />
-          <Squid number={4} />
-          <Squid number={5} />
+          <SquidPreview name="Bubble" squid={<Bubble />} />
+          <SquidPreview name="Smashgirl" squid={<Smashgirl />} />
+          <SquidPreview name="Donut" squid={<Donut />} />
+          <SquidPreview name="Target" squid={<Target />} />
         </div>
       </div>
-      <ConfigAndInstructions />
+      <ConfigAndInstructions name={name} />
     </div>
   );
 };
