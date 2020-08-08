@@ -1,10 +1,49 @@
 import React, { useState } from "react";
+import numbers from "./numbers";
 
-const ColorPicker = ({ color, setColor }) => {
+// todo: pixel scale somehow?
+const pixelSize = 6; // pixel size in pixels ; D
+const pixels = (pixelCount) => pixelCount * pixelSize;
+const Pixel = ({ color }) => {
   return (
-    <div>
-      <input onChange={(e) => setColor(e.target.value)} value={color} />
-      <div style={{ width: 100, height: 100, backgroundColor: color }} />
+    <div
+      style={{ backgroundColor: color, width: pixelSize, height: pixelSize }}
+    />
+  );
+};
+
+const PixelImage = ({ grid, color }) => {
+  return (
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      {grid.map((row, i) => (
+        <div key={i} style={{ display: "flex" }}>
+          {row.map((pixel, j) => (
+            <Pixel key={j} color={pixel ? color : undefined} />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const ColorPicker = ({ color, setColor, number }) => {
+  const size = pixels(12);
+  return (
+    <div style={{ margin: pixels(2) }}>
+      <input
+        style={{ width: size - 20, marginBottom: pixels(2) }}
+        onChange={(e) => setColor(e.target.value)}
+        value={color}
+      />
+      <div
+        style={{
+          width: size,
+          height: size,
+          marginBottom: pixels(2),
+          backgroundColor: color,
+        }}
+      />
+      <PixelImage color="white" grid={numbers[number]} />
     </div>
   );
 };
@@ -51,13 +90,23 @@ const ColorPalette = () => {
   return (
     <div style={{ display: "flex" }}>
       <div>
-        <input value={name} onChange={(e) => setName(e.target.value)} />
-        <ColorPicker color={color0} setColor={setColor0} />
-        <ColorPicker color={color1} setColor={setColor1} />
-        <ColorPicker color={color2} setColor={setColor2} />
-        <ColorPicker color={color3} setColor={setColor3} />
-        <ColorPicker color={color4} setColor={setColor4} />
-        <ColorPicker color={color5} setColor={setColor5} />
+        <div>
+          <label htmlFor="palette-name">Palette Name:</label>
+          <input
+            style={{ display: "block" }}
+            id="palette-name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div style={{ display: "flex" }}>
+          <ColorPicker number={0} color={color0} setColor={setColor0} />
+          <ColorPicker number={1} color={color1} setColor={setColor1} />
+          <ColorPicker number={2} color={color2} setColor={setColor2} />
+          <ColorPicker number={3} color={color3} setColor={setColor3} />
+          <ColorPicker number={4} color={color4} setColor={setColor4} />
+          <ColorPicker number={5} color={color5} setColor={setColor5} />
+        </div>
       </div>
       <div
         style={{
