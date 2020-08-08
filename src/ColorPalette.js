@@ -1,8 +1,8 @@
-import React, { useContext, useState } from "react";
-import { SketchPicker } from "react-color";
-import numbers from "./numbers";
-import squids from "./squids";
-import { ColorContext } from "./contexts";
+import React, { useContext, useState } from 'react';
+import { SketchPicker } from 'react-color';
+import numbers from './numbers';
+import squids from './squids';
+import { ColorContext } from './contexts';
 
 // todo: pixel scale somehow?
 const pixelSize = 6; // pixel size in pixels ; D
@@ -17,9 +17,9 @@ const Pixel = ({ color }) => {
 
 const PixelImage = ({ grid, color }) => {
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
       {grid.map((row, i) => (
-        <div key={i} style={{ display: "flex" }}>
+        <div key={i} style={{ display: 'flex' }}>
           {row.map((pixel, j) => (
             <Pixel key={j} color={pixel ? color : undefined} />
           ))}
@@ -51,24 +51,24 @@ const ColorPicker = ({ number }) => {
           marginBottom: pixels(2),
           backgroundColor: color,
           borderWidth: isBackground ? pixels(1) : 0,
-          borderColor: "white",
-          borderStyle: "solid",
+          borderColor: 'white',
+          borderStyle: 'solid',
         }}
       />
       {pickerOpen ? (
         <div
           style={{
-            position: "absolute",
-            zIndex: "2",
+            position: 'absolute',
+            zIndex: '2',
           }}
         >
           <div
             style={{
-              position: "fixed",
-              top: "0px",
-              right: "0px",
-              bottom: "0px",
-              left: "0px",
+              position: 'fixed',
+              top: '0px',
+              right: '0px',
+              bottom: '0px',
+              left: '0px',
             }}
             onClick={() => setPickerOpen(false)}
           />
@@ -94,7 +94,7 @@ name=${name}
 4=${colors[4]}
 5=${colors[5]}`
     .trimStart()
-    .replace(/#/g, "");
+    .replace(/#/g, '');
 
 const Squid = ({ number, grid }) => {
   const [colors] = useContext(ColorContext);
@@ -129,14 +129,14 @@ const Block = ({ t, l, r, b, backed }) => {
   const defaultSquid = backed ? <Background /> : <Blank />;
   return (
     <div
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
       <div>{t || defaultSquid}</div>
       <div
         style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
           marginTop: -pixels(2),
           marginBottom: -pixels(2),
         }}
@@ -156,6 +156,21 @@ const DemoBlock = () => {
   );
 };
 
+const BlockRow = ({ blocks, offset }) => {
+  // TODO: once we have the diamond chrome, see if this early return needs to respect the `offset` prop
+  if (!blocks) return <div style={{ height: pixels(16) }} />;
+  const offsetStyle = offset ? { marginLeft: pixels(8) } : undefined;
+  return (
+    <div style={{ display: 'flex', marginBottom: -pixels(6), ...offsetStyle }}>
+      {blocks.map((block, i) => (
+        <div key={i} style={{ marginRight: pixels(2) }}>
+          {block}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const ConfigAndInstructions = ({ name }) => {
   const [colors] = useContext(ColorContext);
   const configText = getConfigText({
@@ -166,16 +181,16 @@ const ConfigAndInstructions = ({ name }) => {
     <div
       style={{
         flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
       onClick={() => navigator.clipboard.writeText(configText)}
     >
       <div>Click to copy to clipboard</div>
       <div>
-        See instructions at{" "}
+        See instructions at{' '}
         <a href="https://itch.io/t/914162/color-palettes">
           https://itch.io/t/914162/color-palettes
         </a>
@@ -184,22 +199,21 @@ const ConfigAndInstructions = ({ name }) => {
     </div>
   );
 };
-
 const ColorPalette = () => {
-  const [name, setName] = useState("Pico Dark");
+  const [name, setName] = useState('Pico Dark');
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: 'flex' }}>
       <div>
         <div>
           <label htmlFor="palette-name">Palette Name:</label>
           <input
-            style={{ display: "block" }}
+            style={{ display: 'block' }}
             id="palette-name"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div style={{ display: "flex" }}>
+        <div style={{ display: 'flex' }}>
           <ColorPicker number={0} />
           <ColorPicker number={1} />
           <ColorPicker number={2} />
@@ -207,10 +221,57 @@ const ColorPalette = () => {
           <ColorPicker number={4} />
           <ColorPicker number={5} />
         </div>
-        <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-          <DemoBlock />
-          <Block backed />
-        </div>
+        <BlockRow />
+        <BlockRow
+          blocks={[
+            <Block />,
+            <Block />,
+            <Block t={<Donut />} l={<Target />} r={<Donut />} b={<Donut />} />,
+            <Block />,
+            <Block />,
+          ]}
+        />
+        <BlockRow />
+        <BlockRow
+          blocks={[
+            <Block t={<Blank />} l={<Blank />} b={<Blank />} backed />,
+            <Block t={<Blank />} backed />,
+            <Block t={<Blank />} backed />,
+            <Block t={<Blank />} backed />,
+            <Block t={<Blank />} r={<Blank />} b={<Blank />} backed />,
+          ]}
+        />
+        <BlockRow
+          offset
+          blocks={[
+            <Block backed />,
+            <Block backed />,
+            <Block backed />,
+            <Block backed />,
+          ]}
+        />
+        <BlockRow
+          blocks={[
+            <Block />,
+            <Block backed />,
+            <Block backed />,
+            <Block backed />,
+            <Block />,
+          ]}
+        />
+        <BlockRow
+          offset
+          blocks={[<Block />, <Block backed />, <DemoBlock />, <Block />]}
+        />
+        <BlockRow
+          blocks={[
+            <Block />,
+            <Block />,
+            <Block backed />,
+            <Block />,
+            <Block />,
+          ]}
+        />
       </div>
       <ConfigAndInstructions name={name} />
     </div>
