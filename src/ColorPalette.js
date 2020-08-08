@@ -34,12 +34,13 @@ const ColorPicker = ({ number }) => {
 
   const [colors, setColors] = useContext(ColorContext);
   const color = colors[number];
+  const isBackground = number === 0;
   const setColor = (newColor) =>
     setColors((state) =>
       state[number] === newColor ? state : { ...state, [number]: newColor }
     );
 
-  const size = pixels(12);
+  const size = pixels(isBackground ? 10 : 12);
   return (
     <div style={{ margin: pixels(2) }}>
       <div
@@ -49,6 +50,9 @@ const ColorPicker = ({ number }) => {
           height: size,
           marginBottom: pixels(2),
           backgroundColor: color,
+          borderWidth: isBackground ? pixels(1) : 0,
+          borderColor: "white",
+          borderStyle: "solid",
         }}
       />
       {pickerOpen ? (
@@ -94,7 +98,6 @@ name=${name}
 
 const Squid = ({ number, grid }) => {
   const [colors] = useContext(ColorContext);
-  console.log(grid);
   return <PixelImage color={colors[number]} grid={grid} />;
 };
 
@@ -114,18 +117,21 @@ const Target = () => {
   return <Squid number={5} grid={squids.target} />;
 };
 
-const CountBlankula = () => {
+const Background = () => {
   return <Squid number={1} grid={squids.smashGirl} />;
 };
 
-const Block = () => {
+const Blank = () => {
+  return <Squid grid={squids.smashGirl} />;
+};
+
+const Block = ({ t, l, r, b, backed }) => {
+  const defaultSquid = backed ? <Background /> : <Blank />;
   return (
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-      <div>
-        <Donut />
-      </div>
+      <div>{t || defaultSquid}</div>
       <div
         style={{
           display: "flex",
@@ -135,14 +141,18 @@ const Block = () => {
           marginBottom: -pixels(2),
         }}
       >
-        <Smashgirl />
+        {l || defaultSquid}
         <div style={{ width: pixels(2) }} />
-        <Bubble />
+        {r || defaultSquid}
       </div>
-      <div>
-        <Target />
-      </div>
+      <div>{b || defaultSquid}</div>
     </div>
+  );
+};
+
+const DemoBlock = () => {
+  return (
+    <Block t={<Donut />} l={<Smashgirl />} r={<Bubble />} b={<Target />} />
   );
 };
 
@@ -197,7 +207,10 @@ const ColorPalette = () => {
           <ColorPicker number={4} />
           <ColorPicker number={5} />
         </div>
-        <Block />
+        <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+          <DemoBlock />
+          <Block backed />
+        </div>
       </div>
       <ConfigAndInstructions name={name} />
     </div>
