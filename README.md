@@ -17,9 +17,7 @@ yarn build
 
 ## Todo
 
-- learn how to flexbox
-- learn how to write code
-- text input for colors, generate ini
-- color picker for colors, react-color? https://casesandberg.github.io/react-color/
-- render sample tetronisquare(????) from colors
-- ... draw the rest of the fucking owl
+- [x] text input for colors, generate ini
+- [ ] color picker for colors, [react-color](https://casesandberg.github.io/react-color/)?
+- [ ] render sample tetronisquare(????) from colors
+- [ ] ... draw the rest of the fucking owl
