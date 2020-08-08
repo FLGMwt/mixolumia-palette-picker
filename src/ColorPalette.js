@@ -92,22 +92,6 @@ name=${name}
     .trimStart()
     .replace(/#/g, "");
 
-const SquidPreview = ({ name, squid }) => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-evenly",
-        marginBottom: pixels(2),
-      }}
-    >
-      <div style={{ flex: 1 }}>{name}</div>
-      <div style={{ flex: 1 }}>{squid}</div>
-    </div>
-  );
-};
-
 const Squid = ({ number, grid }) => {
   const [colors] = useContext(ColorContext);
   console.log(grid);
@@ -128,6 +112,38 @@ const Donut = () => {
 
 const Target = () => {
   return <Squid number={5} grid={squids.target} />;
+};
+
+const CountBlankula = () => {
+  return <Squid number={1} grid={squids.smashGirl} />;
+};
+
+const Block = () => {
+  return (
+    <div
+      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
+      <div>
+        <Donut />
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          marginTop: -pixels(2),
+          marginBottom: -pixels(2),
+        }}
+      >
+        <Smashgirl />
+        <div style={{ width: pixels(2) }} />
+        <Bubble />
+      </div>
+      <div>
+        <Target />
+      </div>
+    </div>
+  );
 };
 
 const ConfigAndInstructions = ({ name }) => {
@@ -181,12 +197,7 @@ const ColorPalette = () => {
           <ColorPicker number={4} />
           <ColorPicker number={5} />
         </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <SquidPreview name="Bubble" squid={<Bubble />} />
-          <SquidPreview name="Smashgirl" squid={<Smashgirl />} />
-          <SquidPreview name="Donut" squid={<Donut />} />
-          <SquidPreview name="Target" squid={<Target />} />
-        </div>
+        <Block />
       </div>
       <ConfigAndInstructions name={name} />
     </div>
