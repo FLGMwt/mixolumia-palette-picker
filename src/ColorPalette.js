@@ -26,7 +26,9 @@ name=${name}
 2=${color2}
 3=${color3}
 4=${color4}
-5=${color5}`.trimStart();
+5=${color5}`
+    .trimStart()
+    .replace(/#/g, "");
 
 const ColorPalette = () => {
   // TODO state as object? this is unwieldy 🙃
