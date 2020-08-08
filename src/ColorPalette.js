@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { SketchPicker } from "react-color";
 import numbers from "./numbers";
 import squids from "./squids";
+import { ColorContext } from "./contexts";
 
 // todo: pixel scale somehow?
 const pixelSize = 6; // pixel size in pixels ; D
@@ -28,8 +29,15 @@ const PixelImage = ({ grid, color }) => {
   );
 };
 
-const ColorPicker = ({ color, setColor, number }) => {
+const ColorPicker = ({ number }) => {
   const [pickerOpen, setPickerOpen] = useState(false);
+
+  const [colors, setColors] = useContext(ColorContext);
+  const color = colors[number];
+  const setColor = (newColor) =>
+    setColors((state) =>
+      state[number] === newColor ? state : { ...state, [number]: newColor }
+    );
 
   const size = pixels(12);
   return (
@@ -71,28 +79,29 @@ const ColorPicker = ({ color, setColor, number }) => {
   );
 };
 
-const getConfigText = ({
-  name,
-  color0,
-  color1,
-  color2,
-  color3,
-  color4,
-  color5,
-}) =>
+const getConfigText = ({ name, colors }) =>
   `
 [REPLACEME]
 name=${name}
-0=${color0}
-1=${color1}
-2=${color2}
-3=${color3}
-4=${color4}
-5=${color5}`
+0=${colors[0]}
+1=${colors[1]}
+2=${colors[2]}
+3=${colors[3]}
+4=${colors[4]}
+5=${colors[5]}`
     .trimStart()
     .replace(/#/g, "");
 
-const Squid = ({ color, name, grid }) => {
+const squidConfig = {
+  2: { name: "Bubble", grid: squids.bubble },
+  3: { name: "Smashgirl", grid: squids.smashGirl },
+  4: { name: "Donut", grid: squids.donut },
+  5: { name: "Target", grid: squids.target },
+};
+
+const Squid = ({ number }) => {
+  const [colors] = useContext(ColorContext);
+  const config = squidConfig[number];
   return (
     <div
       style={{
@@ -102,10 +111,39 @@ const Squid = ({ color, name, grid }) => {
         marginBottom: pixels(2),
       }}
     >
-      <div style={{ flex: 1 }}>{name}</div>
+      <div style={{ flex: 1 }}>{config.name}</div>
       <div style={{ flex: 1 }}>
-        <PixelImage color={color} grid={grid} />
+        <PixelImage color={colors[number]} grid={config.grid} />
       </div>
+    </div>
+  );
+};
+
+const ConfigAndInstructions = ({ name }) => {
+  const [colors] = useContext(ColorContext);
+  const configText = getConfigText({
+    name,
+    colors,
+  });
+  return (
+    <div
+      style={{
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onClick={() => navigator.clipboard.writeText(configText)}
+    >
+      <div>Click to copy to clipboard</div>
+      <div>
+        See instructions at{" "}
+        <a href="https://itch.io/t/914162/color-palettes">
+          https://itch.io/t/914162/color-palettes
+        </a>
+      </div>
+      <textarea disabled rows={8} value={configText} />
     </div>
   );
 };
@@ -113,21 +151,6 @@ const Squid = ({ color, name, grid }) => {
 const ColorPalette = () => {
   // TODO state as object? this is unwieldy 🙃
   const [name, setName] = useState("Pico Dark");
-  const [color0, setColor0] = useState("#000000");
-  const [color1, setColor1] = useState("#1d2b53");
-  const [color2, setColor2] = useState("#fff7f2");
-  const [color3, setColor3] = useState("#ffec27");
-  const [color4, setColor4] = useState("#29adff");
-  const [color5, setColor5] = useState("#ff004d");
-  const configText = getConfigText({
-    name,
-    color0,
-    color1,
-    color2,
-    color3,
-    color4,
-    color5,
-  });
   return (
     <div style={{ display: "flex" }}>
       <div>
@@ -141,39 +164,21 @@ const ColorPalette = () => {
           />
         </div>
         <div style={{ display: "flex" }}>
-          <ColorPicker number={0} color={color0} setColor={setColor0} />
-          <ColorPicker number={1} color={color1} setColor={setColor1} />
-          <ColorPicker number={2} color={color2} setColor={setColor2} />
-          <ColorPicker number={3} color={color3} setColor={setColor3} />
-          <ColorPicker number={4} color={color4} setColor={setColor4} />
-          <ColorPicker number={5} color={color5} setColor={setColor5} />
+          <ColorPicker number={0} />
+          <ColorPicker number={1} />
+          <ColorPicker number={2} />
+          <ColorPicker number={3} />
+          <ColorPicker number={4} />
+          <ColorPicker number={5} />
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <Squid color={color2} name="Bubble" grid={squids.bubble} />
-          <Squid color={color3} name="Smashgirl" grid={squids.smashGirl} />
-          <Squid color={color4} name="Donut" grid={squids.donut} />
-          <Squid color={color5} name="Target" grid={squids.target} />
+          <Squid number={2} />
+          <Squid number={3} />
+          <Squid number={4} />
+          <Squid number={5} />
         </div>
       </div>
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        onClick={() => navigator.clipboard.writeText(configText)}
-      >
-        <div>Click to copy to clipboard</div>
-        <div>
-          See instructions at{" "}
-          <a href="https://itch.io/t/914162/color-palettes">
-            https://itch.io/t/914162/color-palettes
-          </a>
-        </div>
-        <textarea disabled rows={8} value={configText} />
-      </div>
+      <ConfigAndInstructions />
     </div>
   );
 };
