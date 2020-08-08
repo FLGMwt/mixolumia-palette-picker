@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { SketchPicker } from "react-color";
 import numbers from "./numbers";
+import squids from "./squids";
 
 // todo: pixel scale somehow?
 const pixelSize = 6; // pixel size in pixels ; D
@@ -29,7 +30,6 @@ const PixelImage = ({ grid, color }) => {
 
 const ColorPicker = ({ color, setColor, number }) => {
   const [pickerOpen, setPickerOpen] = useState(false);
-  console.log({ pickerOpen });
 
   const size = pixels(12);
   return (
@@ -92,6 +92,24 @@ name=${name}
     .trimStart()
     .replace(/#/g, "");
 
+const Squid = ({ color, name, grid }) => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-evenly",
+        marginBottom: pixels(2),
+      }}
+    >
+      <div style={{ flex: 1 }}>{name}</div>
+      <div style={{ flex: 1 }}>
+        <PixelImage color={color} grid={grid} />
+      </div>
+    </div>
+  );
+};
+
 const ColorPalette = () => {
   // TODO state as object? this is unwieldy 🙃
   const [name, setName] = useState("Pico Dark");
@@ -129,6 +147,12 @@ const ColorPalette = () => {
           <ColorPicker number={3} color={color3} setColor={setColor3} />
           <ColorPicker number={4} color={color4} setColor={setColor4} />
           <ColorPicker number={5} color={color5} setColor={setColor5} />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <Squid color={color2} name="Bubble" grid={squids.bubble} />
+          <Squid color={color3} name="Smashgirl" grid={squids.smashGirl} />
+          <Squid color={color4} name="Donut" grid={squids.donut} />
+          <Squid color={color5} name="Target" grid={squids.target} />
         </div>
       </div>
       <div
