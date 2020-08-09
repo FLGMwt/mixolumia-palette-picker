@@ -294,23 +294,24 @@ const ConfigAndInstructions = ({ name }) => {
         padding: pixels(10),
       }}
     >
-      <div>
-        Share this palette:{' '}
+      <p>
+        <a href="https://davemakes.itch.io/mixolumia">Go get this game!</a>
+      </p>
+      <p>
+        <a href="https://itch.io/t/914162/color-palettes">
+          Instructions for using this palette
+        </a>
+      </p>
+      <ConfigText configText={configText} />
+      <p>
         <a
           href={`${window.location.origin}?${queryString
             .stringify({ name, ...colors })
             .replace(/%23/g, '')}`}
         >
-          {name}
+          Share the "{name}" palette
         </a>
-      </div>
-      <div>
-        See instructions at{' '}
-        <a href="https://itch.io/t/914162/color-palettes">
-          https://itch.io/t/914162/color-palettes
-        </a>
-      </div>
-      <ConfigText configText={configText} />
+      </p>
     </div>
   );
 };
