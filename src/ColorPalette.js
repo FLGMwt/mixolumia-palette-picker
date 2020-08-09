@@ -191,6 +191,7 @@ const getGrid = (width, height) => {
       ) {
         return 1;
       }
+      return 0;
     });
     const leftHalf = [...rightHalf].reverse();
     return [...leftHalf, ...rightHalf];
@@ -310,7 +311,7 @@ const ColorPalette = () => {
             <Block />,
           ]}
         />
-        <div style={{ marginLeft: pixels(5), marginTop: -pixels(116) }}>
+        <div style={{ marginLeft: pixels(5) }}>
           <BoardFrame />
         </div>
       </div>
