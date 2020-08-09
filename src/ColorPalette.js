@@ -30,6 +30,21 @@ const PixelImage = React.memo(({ grid, color }) => {
   );
 });
 
+const playTrack = (id) => {
+  const element = document.getElementById(id);
+  console.log({ element });
+  if (element) {
+    if (element.paused) {
+      element.play();
+    } else {
+      element.currentTime = 0;
+    }
+  }
+};
+
+const playOpen = () => playTrack('audio-menu-0');
+const playClose = () => playTrack('audio-menu-1');
+
 const ColorPicker = ({ number }) => {
   const [pickerOpen, setPickerOpen] = useState(false);
 
@@ -45,7 +60,10 @@ const ColorPicker = ({ number }) => {
   return (
     <div style={{ margin: pixels(1) }}>
       <div
-        onClick={() => setPickerOpen(true)}
+        onClick={() => {
+          setPickerOpen(true);
+          playOpen();
+        }}
         style={{
           width: size,
           height: size,
@@ -71,7 +89,10 @@ const ColorPicker = ({ number }) => {
               bottom: '0px',
               left: '0px',
             }}
-            onClick={() => setPickerOpen(false)}
+            onClick={() => {
+              setPickerOpen(false);
+              playClose();
+            }}
           />
           <SketchPicker
             color={color}
