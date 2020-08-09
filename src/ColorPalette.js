@@ -3,9 +3,10 @@ import { SketchPicker } from 'react-color';
 import numbers from './numbers';
 import squids from './squids';
 import { ColorContext } from './contexts';
+import queryString from 'query-string';
 
 // todo: pixel scale somehow?
-const pixelSize = 6; // pixel size in pixels ; D
+const pixelSize = 4; // pixel size in pixels ; D
 const pixels = (pixelCount) => pixelCount * pixelSize;
 const Pixel = React.memo(({ color }) => {
   return (
@@ -228,6 +229,16 @@ const ConfigAndInstructions = ({ name }) => {
     >
       <div>Click to copy to clipboard</div>
       <div>
+        Share this palette:{' '}
+        <a
+          href={`${window.location.origin}?${queryString
+            .stringify({ name, ...colors })
+            .replace(/%23/g, '')}`}
+        >
+          {name}
+        </a>
+      </div>
+      <div>
         See instructions at{' '}
         <a href="https://itch.io/t/914162/color-palettes">
           https://itch.io/t/914162/color-palettes
@@ -238,8 +249,7 @@ const ConfigAndInstructions = ({ name }) => {
   );
 };
 
-const ColorPalette = () => {
-  const [name, setName] = useState('Pico Dark');
+const ColorPalette = ({ name, setName }) => {
   return (
     <div style={{ display: 'flex' }}>
       <div>
