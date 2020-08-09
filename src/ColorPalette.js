@@ -311,7 +311,7 @@ const ColorPalette = () => {
             <Block />,
           ]}
         />
-        <div style={{ marginLeft: pixels(5) }}>
+        <div style={{ marginLeft: pixels(5), marginTop: -pixels(116) }}>
           <BoardFrame />
         </div>
       </div>
