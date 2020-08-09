@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo } from 'react';
+import React, { useContext, useState, useMemo, useEffect } from 'react';
 import { SketchPicker } from 'react-color';
 import numbers from './numbers';
 import squids from './squids';
@@ -32,7 +32,6 @@ const PixelImage = React.memo(({ grid, color }) => {
 
 const playTrack = (id) => {
   const element = document.getElementById(id);
-  console.log({ element });
   if (element) {
     if (element.paused) {
       element.play();
@@ -231,6 +230,53 @@ const BoardFrame = React.memo(() => {
   return <PixelImage color={colors[1]} grid={grid} />;
 });
 
+const ConfigText = ({ configText }) => {
+  const [colors] = useContext(ColorContext);
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    if (copied) {
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }, [copied]);
+  const [hasHover, setHasHover] = useState(false);
+  const hoverProps = {
+    onMouseEnter: () => setHasHover(true),
+    onMouseLeave: () => setHasHover(false),
+  };
+  const borderColor = hasHover ? colors[1] : colors[2];
+  return (
+    <pre
+      {...hoverProps}
+      style={{
+        borderWidth: pixels(1),
+        borderStyle: 'solid',
+        borderColor,
+        padding: pixels(8),
+        position: 'relative',
+      }}
+      onClick={() => {
+        navigator.clipboard.writeText(configText);
+        setCopied(true);
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          right: 0,
+          top: 0,
+          backgroundColor: borderColor,
+          padding: pixels(1),
+          color: colors[0],
+          fontSize: 12,
+        }}
+      >
+        {copied ? 'Copied to clipboard' : 'Click to copy'}
+      </div>
+      {configText}
+    </pre>
+  );
+};
+
 const ConfigAndInstructions = ({ name }) => {
   const [colors] = useContext(ColorContext);
   const configText = getConfigText({
@@ -245,10 +291,9 @@ const ConfigAndInstructions = ({ name }) => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
+        padding: pixels(10),
       }}
-      onClick={() => navigator.clipboard.writeText(configText)}
     >
-      <div>Click to copy to clipboard</div>
       <div>
         Share this palette:{' '}
         <a
@@ -265,7 +310,7 @@ const ConfigAndInstructions = ({ name }) => {
           https://itch.io/t/914162/color-palettes
         </a>
       </div>
-      <textarea disabled rows={8} value={configText} />
+      <ConfigText configText={configText} />
     </div>
   );
 };

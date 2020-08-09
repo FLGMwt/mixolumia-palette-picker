@@ -34,7 +34,10 @@ const App = () => {
 
   return (
     <div className="App">
-      <header className="App-header" style={{ backgroundColor: colors[0] }}>
+      <header
+        className="App-header"
+        style={{ backgroundColor: colors[0], color: colors[1] }}
+      >
         <ColorContext.Provider value={colorContextValue}>
           <ColorPalette name={name} setName={setName} />
         </ColorContext.Provider>
