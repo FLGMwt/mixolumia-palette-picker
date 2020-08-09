@@ -295,7 +295,24 @@ const ConfigAndInstructions = ({ name }) => {
       }}
     >
       <p>
-        <a href="https://davemakes.itch.io/mixolumia">Go get this game!</a>
+        <a href="https://support.eji.org/give/153413/#!/donation/checkout">
+          #BlackLivesMatter
+        </a>{' '}
+        <a href="https://blacktranslivesmatter.carrd.co/">
+          #BlackTransLivesMatter
+        </a>{' '}
+        <a href="https://unitedwedream.org/abolishice/">#AbolishICE</a>
+      </p>
+      <p>
+        <a href="https://davemakes.itch.io/mixolumia">
+          <span role="img" aria-label="sparkle">
+            ✨
+          </span>{' '}
+          Get Mixolumia{' '}
+          <span role="img" aria-label="sparkle">
+            ✨
+          </span>
+        </a>
       </p>
       <p>
         <a href="https://itch.io/t/914162/color-palettes">
