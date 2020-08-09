@@ -336,7 +336,13 @@ const ConfigAndInstructions = ({ name }) => {
 const ColorPalette = ({ name, setName }) => {
   return (
     <div style={{ display: 'flex' }}>
-      <div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
         <div>
           <label htmlFor="palette-name">Palette Name:</label>
           <input
