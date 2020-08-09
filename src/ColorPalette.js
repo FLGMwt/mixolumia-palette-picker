@@ -352,7 +352,7 @@ const ColorPalette = ({ name, setName }) => {
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div style={{ display: 'flex', marginBottom: pixels(30) }}>
+        <div style={{ display: 'flex', marginBottom: pixels(40) }}>
           <ColorPicker number={0} />
           <ColorPicker number={1} />
           <ColorPicker number={2} />
