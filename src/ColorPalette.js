@@ -355,19 +355,21 @@ const ColorPalette = ({ name, setName }) => {
         }}
       >
         <div>
-          <label htmlFor="palette-name">Palette Name:</label>
-          <input
-            style={{ display: 'block' }}
-            id="palette-name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
           <button onClick={randomizeColors}>
             Randomize{' '}
             <span role="img" aria-label="eyes looking">
               👀
             </span>
           </button>
+          <div>
+            <label htmlFor="palette-name">Palette Name:</label>
+            <input
+              style={{ display: 'block' }}
+              id="palette-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
         </div>
         <div style={{ display: 'flex', marginBottom: pixels(40) }}>
           <ColorPicker number={0} />
