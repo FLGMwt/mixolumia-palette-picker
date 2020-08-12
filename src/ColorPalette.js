@@ -4,6 +4,8 @@ import numbers from './numbers';
 import squids from './squids';
 import { ColorContext } from './contexts';
 import queryString from 'query-string';
+import randomColor from 'randomcolor';
+import randomWords from 'random-words';
 
 // todo: pixel scale somehow?
 const pixelSize = 4; // pixel size in pixels ; D
@@ -334,6 +336,15 @@ const ConfigAndInstructions = ({ name }) => {
 };
 
 const ColorPalette = ({ name, setName }) => {
+  const [colors, setColors] = useContext(ColorContext);
+  const randomizeColors = () => {
+    setName(randomWords({ exactly: 2, join: ' ' }));
+    setColors(
+      Object.fromEntries(
+        Object.entries(colors).map(([key]) => [key, randomColor()])
+      )
+    );
+  };
   return (
     <div style={{ display: 'flex' }}>
       <div
@@ -351,6 +362,12 @@ const ColorPalette = ({ name, setName }) => {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
+          <button onClick={randomizeColors}>
+            Randomize{' '}
+            <span role="img" aria-label="eyes looking">
+              👀
+            </span>
+          </button>
         </div>
         <div style={{ display: 'flex', marginBottom: pixels(40) }}>
           <ColorPicker number={0} />
