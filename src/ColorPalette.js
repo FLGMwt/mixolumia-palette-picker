@@ -112,7 +112,7 @@ const ColorPicker = ({ number }) => {
 const getConfigText = ({ name, colors, index = 'REPLACEME', author }) =>
   `
 [${index}]
-name=${name}${author && `\nauthor=${author}`}
+name=${name}${author ? `\nauthor=${author}` : ''}
 0=${colors[0]}
 1=${colors[1]}
 2=${colors[2]}
