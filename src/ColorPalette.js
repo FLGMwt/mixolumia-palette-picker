@@ -6,6 +6,9 @@ import { ColorContext } from './contexts';
 import queryString from 'query-string';
 import randomColor from 'randomcolor';
 import randomWords from 'random-words';
+import tinykeys from 'tinykeys';
+
+const randomName = () => randomWords({ exactly: 2, join: ' ' });
 
 // todo: pixel scale somehow?
 const pixelSize = 4; // pixel size in pixels ; D
@@ -106,10 +109,10 @@ const ColorPicker = ({ number }) => {
   );
 };
 
-const getConfigText = ({ name, colors }) =>
+const getConfigText = ({ name, colors, index = 'REPLACEME', author }) =>
   `
-[REPLACEME]
-name=${name}
+[${index}]
+name=${name}${author && `\nauthor=${author}`}
 0=${colors[0]}
 1=${colors[1]}
 2=${colors[2]}
@@ -118,6 +121,20 @@ name=${name}
 5=${colors[5]}`
     .trimStart()
     .replace(/#/g, '');
+
+const randomConfigs = () => {
+  return new Array(100)
+    .fill()
+    .map((value, index) =>
+      getConfigText({
+        name: randomName(),
+        colors: new Array(6).fill().map(randomColor),
+        index,
+        author: 'FLGMwt',
+      })
+    )
+    .join('\n\n');
+};
 
 const Squid = ({ number, grid }) => {
   const [colors] = useContext(ColorContext);
@@ -336,9 +353,20 @@ const ConfigAndInstructions = ({ name }) => {
 };
 
 const ColorPalette = ({ name, setName }) => {
+  useEffect(() => {
+    return tinykeys(window, {
+      'Alt+r': () => {
+        navigator.clipboard.writeText(randomConfigs());
+        alert(
+          "100 randomized palettes added to your clipboard. Make sure they're at the top"
+        );
+      },
+    });
+  });
+
   const [colors, setColors] = useContext(ColorContext);
   const randomizeColors = () => {
-    setName(randomWords({ exactly: 2, join: ' ' }));
+    setName(randomName);
     setColors(
       Object.fromEntries(
         Object.entries(colors).map(([key]) => [key, randomColor()])
