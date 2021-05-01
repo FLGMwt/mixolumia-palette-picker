@@ -262,7 +262,7 @@ const ConfigText = ({ configText }) => {
     onMouseEnter: () => setHasHover(true),
     onMouseLeave: () => setHasHover(false),
   };
-  const borderColor = hasHover ? colors[1] : colors[2];
+  const borderColor = hasHover ? colors[2] : colors[1];
   return (
     <pre
       {...hoverProps}
@@ -289,9 +289,9 @@ const ConfigText = ({ configText }) => {
           fontSize: 12,
         }}
       >
-        {copied ? 'Copied to clipboard' : 'Click to copy'}
+        {copied ? 'Config copied to clipboard' : 'Click to copy config'}
       </div>
-      {configText}
+      <div style={{ color: colors[2] }}>{configText}</div>
     </pre>
   );
 };
